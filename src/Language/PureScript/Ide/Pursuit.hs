@@ -24,6 +24,7 @@ import qualified Control.Exception             as E
 import           Data.Aeson
 import           Data.ByteString               (ByteString)
 import           Data.ByteString.Lazy          (fromStrict)
+import           Data.ByteString.Char8         (unpack)
 import           Data.Foldable                 (toList)
 import           Data.Maybe                    (mapMaybe)
 import           Data.Monoid                   ((<>))
@@ -34,6 +35,7 @@ import           Language.PureScript.Ide.Types
 import           Network.HTTP.Types.Header     (hAccept)
 import           Pipes.HTTP
 import qualified Pipes.Prelude                 as P
+import           Debug.Trace
 
 -- We need to remove trailing dots because Pursuit will return a 400 otherwise
 -- TODO: remove this when the issue is fixed at Pursuit
@@ -57,6 +59,7 @@ handler _ = pure []
 searchPursuitForDeclarations :: Text -> IO [PursuitResponse]
 searchPursuitForDeclarations query =
     (do r <- queryPursuit query
+--        let results' = decode (trace ("Response body " ++ unpack r) (fromStrict r)) :: Maybe Array
         let results' = decode (fromStrict r) :: Maybe Array
         case results' of
           Nothing -> pure []
