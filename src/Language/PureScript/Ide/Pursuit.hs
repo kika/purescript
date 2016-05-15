@@ -60,6 +60,10 @@ searchPursuitForDeclarations :: Text -> IO [PursuitResponse]
 searchPursuitForDeclarations query =
     (do r <- queryPursuit query
 --        let results' = decode (trace ("Response body " ++ unpack r) (fromStrict r)) :: Maybe Array
+        {-
+        let body = fromStrict r
+            results' = decode body :: Maybe Array
+        -}
         let results' = decode (fromStrict r) :: Maybe Array
         case results' of
           Nothing -> pure []
